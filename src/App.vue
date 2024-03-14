@@ -50,17 +50,17 @@ export default {
       // current week
       migrationData.currentWeek.current = parseInt(data[0].split(',')[1])
       migrationData.currentWeek.total = parseInt(data[0].split(',')[2])
-      migrationData.currentWeek.percent = Math.ceil(
-        (migrationData.currentWeek.current / migrationData.currentWeek.total) * 100
-      )
+      migrationData.currentWeek.percent = (Math.round(
+        (migrationData.currentWeek.current / migrationData.currentWeek.total) * 100 *10
+      ) / 10).toFixed(1);
       migrationData.currentWeek.week = data[0].split(',')[0]
 
       // last week
       migrationData.lastWeek.current = parseInt(data[1].split(',')[1])
       migrationData.lastWeek.total = parseInt(data[1].split(',')[2])
-      migrationData.lastWeek.percent = Math.ceil(
-        (migrationData.lastWeek.current / migrationData.lastWeek.total) * 100
-      )
+      migrationData.lastWeek.percent = Math.round(
+        (migrationData.lastWeek.current / migrationData.lastWeek.total) * 100 * 10
+      ) / 10;
 
       // trend
       migrationData.trend =
@@ -118,7 +118,7 @@ export default {
 }
 
 .value {
-  font-size: 100px;
+  font-size: 80px;
   font-weight: bold;
 }
 .label {
