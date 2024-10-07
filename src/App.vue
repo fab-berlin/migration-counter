@@ -19,27 +19,35 @@
         {{ migrationData.currentWeek.total }} Datensätzen migriert
       </p>
     </div>
+    <Confetti v-if="showConfetti" />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import { ref, reactive } from 'vue'
+import Confetti from '@/components/Confetti.vue'
 
 export default {
   name: 'App',
+  components: { Confetti },
   setup() {
     const migrationData = reactive({
       currentWeek: { current: 0, total: 0, percent: 0, week: '' },
       lastWeek: { current: 0, total: 0, percent: 0 },
       trend: 0
-    })
+    });
+
+    const confettiThresholds = [20,40,50,70,75,80,100];
+
     const arrowClasses = ref('')
     const classes = {
       '-1': 'down',
       0: 'unmodified',
       1: 'up'
     }
+
+    const showConfetti = ref(false);
 
     axios.get('./data.csv').then((response) => {
       const data = response.data.split('\n').reverse()
@@ -62,6 +70,10 @@ export default {
         (migrationData.lastWeek.current / migrationData.lastWeek.total) * 100 * 10
       ) / 10;
 
+      if (Math.ceil(migrationData.lastWeek.percent) < Math.floor(migrationData.currentWeek.percent) && confettiThresholds.includes(Math.floor(migrationData.currentWeek.percent))) {
+        showConfetti.value = true;
+      }
+
       // trend
       migrationData.trend =
         migrationData.currentWeek.percent > migrationData.lastWeek.percent
@@ -74,7 +86,8 @@ export default {
 
     return {
       migrationData,
-      arrowClasses
+      arrowClasses,
+      showConfetti
     }
   }
 }
@@ -88,6 +101,8 @@ export default {
   border: 1px solid #000;
   padding: 15px;
   width: 350px;
+  position: relative;
+  overflow: hidden;
 }
 .widget-content {
   display: flex;
