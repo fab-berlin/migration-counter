@@ -38,7 +38,7 @@ export default {
       trend: 0
     });
 
-    const confettiThresholds = [20,40,50,70,75,80,100];
+    const confettiThresholds = [10,20,30,40,50,60,70,80,90,100];
 
     const arrowClasses = ref('')
     const classes = {
@@ -70,7 +70,12 @@ export default {
         (migrationData.lastWeek.current / migrationData.lastWeek.total) * 100 * 10
       ) / 10;
 
-      if (Math.ceil(migrationData.lastWeek.percent) < Math.floor(migrationData.currentWeek.percent) && confettiThresholds.includes(Math.floor(migrationData.currentWeek.percent))) {
+      const thisWeekInt = Math.floor(migrationData.currentWeek.percent/10)*10;
+      const lastWeekInt = Math.floor(migrationData.lastWeek.percent/10)*10;
+
+      const index = confettiThresholds.indexOf(thisWeekInt);
+
+      if (index > -1 && lastWeekInt < confettiThresholds[index]) {
         showConfetti.value = true;
       }
 
